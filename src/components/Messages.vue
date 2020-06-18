@@ -20,7 +20,8 @@ export default {
   methods: {
     isMe(sender) {
       return sender === this.me.user_id ? '(me)' : ''
-    }
+    },
+    
   }
 }
 </script>

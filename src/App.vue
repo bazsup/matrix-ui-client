@@ -7,7 +7,7 @@
         <button @click="logout">logout</button>
       </div>
       <Room :rooms="rooms" :directRooms="directRooms" @openRoom="openRoom" />
-      <Messages :messages="messages" :me="me" />
+      <Messages :messages="messages" :me="me"  />
     </div>
   </div>
 </template>
@@ -33,7 +33,8 @@ export default {
       directRooms: [],
       matrix: new Matrix(this),
       me: null,
-      messages: []
+      messages: [],
+      activeRoom: -1
     }
   },
   methods: {
@@ -43,6 +44,7 @@ export default {
       this.matrix.getAccessToken()
       this.matrix.startClient()
       this.loggedIn = true
+      this.onTimeline()
     },
     logout() {
       this.matrix.logout()
@@ -54,7 +56,17 @@ export default {
       this.messages = timeline.filter(
         eventTimeline => eventTimeline.event.type === 'm.room.message'
       ).map(eventTimeline => eventTimeline.event)
-      console.log(this.messages)
+      this.activeRoom = roomId
+    },
+    onTimeline() {
+      this.matrix.listenTimeline(({ event }) => {
+        const isEventOnActiveRoom = event.room_id === this.activeRoom
+        const isEventMessage = event.type === 'm.room.message'
+        if (isEventOnActiveRoom && isEventMessage) {
+          this.messages.push(event)
+        }
+      })
+
     }
   },
   async mounted() {

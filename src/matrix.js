@@ -75,6 +75,10 @@ export default class Matrix {
     });
   }
 
+  listenTimeline(callback) {
+    this.client.on('Room.timeline', callback)
+  }
+
   onPrepared() {
     // notifications
     this.client.on(
