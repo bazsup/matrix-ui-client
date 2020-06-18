@@ -142,4 +142,8 @@ export default class Matrix {
     this.view.rooms = rooms
     // this.state.rooms = rooms;
   }
+
+  getRoomTimeline(roomId) {
+    return this.client.getRoom(roomId).timeline
+  }
 }

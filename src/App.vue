@@ -6,7 +6,8 @@
         Login with {{ me.user_id }}
         <button @click="logout">logout</button>
       </div>
-      <Room :rooms="rooms" :directRooms="directRooms" />
+      <Room :rooms="rooms" :directRooms="directRooms" @openRoom="openRoom" />
+      <Messages :messages="messages" :me="me" />
     </div>
   </div>
 </template>
@@ -14,6 +15,7 @@
 <script>
 import Login from '@/components/Login.vue'
 import Room from '@/components/Room.vue'
+import Messages from '@/components/Messages.vue'
 
 import Matrix from '@/matrix'
 
@@ -22,6 +24,7 @@ export default {
   components: {
     Login,
     Room,
+    Messages
   },
   data() {
     return {
@@ -29,7 +32,8 @@ export default {
       rooms: [],
       directRooms: [],
       matrix: new Matrix(this),
-      me: null
+      me: null,
+      messages: []
     }
   },
   methods: {
@@ -44,11 +48,18 @@ export default {
       this.matrix.logout()
       this.loggedIn = false
       window.location.reload()
+    },
+    openRoom(roomId) {
+      const timeline = this.matrix.getRoomTimeline(roomId)
+      this.messages = timeline.filter(
+        eventTimeline => eventTimeline.event.type === 'm.room.message'
+      ).map(eventTimeline => eventTimeline.event)
+      console.log(this.messages)
     }
   },
   async mounted() {
     const matrixClientOptions = {
-      baseUrl: "http://localhost:8008"
+      baseUrl: 'http://localhost:8008'
     }
     this.matrix.initClient(matrixClientOptions)
   }
