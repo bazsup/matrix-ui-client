@@ -7,7 +7,18 @@
         <button @click="logout">logout</button>
       </div>
       <Room :rooms="rooms" :directRooms="directRooms" @openRoom="openRoom" />
-      <Messages :messages="messages" :me="me"  />
+      <Messages :messages="messages" :me="me" />
+      <div v-if="activeRoom !== -1">
+        <textarea
+          name=""
+          id=""
+          cols="30"
+          rows="2"
+          placeholder="พิมพ์ข้อความไปในห้องแชท"
+          v-model="text"
+        ></textarea>
+        <button @click="sendMessage">ส่งข้อความ</button>
+      </div>
     </div>
   </div>
 </template>
@@ -34,7 +45,8 @@ export default {
       matrix: new Matrix(this),
       me: null,
       messages: [],
-      activeRoom: -1
+      activeRoom: -1,
+      text: ''
     }
   },
   methods: {
@@ -53,9 +65,9 @@ export default {
     },
     openRoom(roomId) {
       const timeline = this.matrix.getRoomTimeline(roomId)
-      this.messages = timeline.filter(
-        eventTimeline => eventTimeline.event.type === 'm.room.message'
-      ).map(eventTimeline => eventTimeline.event)
+      this.messages = timeline
+        .filter(eventTimeline => eventTimeline.event.type === 'm.room.message')
+        .map(eventTimeline => eventTimeline.event)
       this.activeRoom = roomId
     },
     onTimeline() {
@@ -66,7 +78,13 @@ export default {
           this.messages.push(event)
         }
       })
-
+    },
+    sendMessage() {
+      this.matrix.sendMessage({
+        roomId: this.activeRoom,
+        body: this.text
+      })
+      this.text = ''
     }
   },
   async mounted() {

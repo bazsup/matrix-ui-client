@@ -79,6 +79,16 @@ export default class Matrix {
     this.client.on('Room.timeline', callback)
   }
 
+  sendMessage({ roomId, body }) {
+    const content = {
+      body: body,
+      "msgtype": "m.text"
+    }
+    this.client.sendEvent(roomId, "m.room.message", content, "", (err, res) => {
+      console.log(err, res)
+    });
+  }
+
   onPrepared() {
     // notifications
     this.client.on(
