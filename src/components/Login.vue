@@ -1,41 +1,38 @@
 <template>
   <div>
-    login
-    <div v-for="room in rooms" :key="room.roomId">
-      name: {{room.name}} ->
-      {{ isDirectMessage(room) }}
-    </div>
+    <form @submit.prevent="login">
+      please login
+      <div>
+        <input type="text" v-model="user" required>
+      </div>
+      <div>
+        <input type="text" v-model="password" required>
+      </div>
+      <div>
+        <button type="submit">Login</button>
+      </div>
+
+    </form>
   </div>
 </template>
 
 <script>
-import Matrix from '@/matrix'
-
 export default {
   data() {
     return {
-      rooms: [],
-      directRooms: []
+      user: '',
+      password: ''
     }
   },
   methods: {
-    isDirectMessage(room) {
-      return this.directRooms.includes(room.roomId)
+    login() {
+      const account = {
+        user: this.user,
+        password: this.password
+      }
+      console.log('login method')
+      this.$emit('submit', account)
     }
-  },
-  async mounted() {
-    const matrix = new Matrix(this)
-    const matrixClientOptions = {
-      baseUrl: "http://localhost:8008"
-    }
-
-    matrix.initClient(matrixClientOptions)
-    await matrix.login({
-      user: 'bas',
-      password: 'bas'
-    })
-    matrix.getAccessToken()
-    matrix.startClient()
-  }  
+  }
 }
 </script>

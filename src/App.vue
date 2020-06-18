@@ -1,16 +1,56 @@
 <template>
   <div id="app">
-    <Login />
+    <Login @submit="login" v-if="!loggedIn" />
+    <div v-else>
+      <div style="background: lightblue;">
+        Login with {{ me.user_id }}
+        <button @click="logout">logout</button>
+      </div>
+      <Room :rooms="rooms" :directRooms="directRooms" />
+    </div>
   </div>
 </template>
 
 <script>
 import Login from '@/components/Login.vue'
+import Room from '@/components/Room.vue'
+
+import Matrix from '@/matrix'
 
 export default {
   name: 'App',
   components: {
-    Login
+    Login,
+    Room,
+  },
+  data() {
+    return {
+      loggedIn: false,
+      rooms: [],
+      directRooms: [],
+      matrix: new Matrix(this),
+      me: null
+    }
+  },
+  methods: {
+    async login(account) {
+      console.log(account)
+      await this.matrix.login(account)
+      this.matrix.getAccessToken()
+      this.matrix.startClient()
+      this.loggedIn = true
+    },
+    logout() {
+      this.matrix.logout()
+      this.loggedIn = false
+      window.location.reload()
+    }
+  },
+  async mounted() {
+    const matrixClientOptions = {
+      baseUrl: "http://localhost:8008"
+    }
+    this.matrix.initClient(matrixClientOptions)
   }
 }
 </script>

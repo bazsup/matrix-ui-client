@@ -28,7 +28,18 @@ export default class Matrix {
       })
       .then((response) => {
         console.log('token: ', response.access_token)
+        this.view.me = response
       });
+  }
+
+  resetData() {
+    this.view.rooms = []
+    this.view.directRooms = []
+  }
+
+  logout() {
+    this.client.logout()
+    this.resetData()    
   }
 
   getAccessToken() {
