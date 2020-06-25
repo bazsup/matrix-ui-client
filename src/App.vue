@@ -19,6 +19,7 @@
             :messages="messages"
             :me="me"
             style="height: 54vh; overflow-y: scroll;"
+            ref="message-pane"
           />
           <div
             v-if="activeRoom !== -1"
@@ -75,7 +76,6 @@ export default {
   },
   methods: {
     async login(account) {
-      console.log(account)
       await this.matrix.login(account)
       this.matrix.getAccessToken()
       this.matrix.startClient()
@@ -93,6 +93,7 @@ export default {
         .filter(eventTimeline => eventTimeline.event.type === 'm.room.message')
         .map(eventTimeline => eventTimeline.event)
       this.activeRoom = roomId
+      this.scrollMessageToBottom()
     },
     onTimeline() {
       this.matrix.listenTimeline(({ event }) => {
@@ -100,8 +101,16 @@ export default {
         const isEventMessage = event.type === 'm.room.message'
         if (isEventOnActiveRoom && isEventMessage) {
           this.messages.push(event)
+          this.scrollMessageToBottom()
         }
       })
+    },
+    scrollMessageToBottom() {
+      setTimeout(() => {
+        const messagePane = this.$refs['message-pane'].$el
+        const scrollPosition = messagePane.scrollHeight
+        messagePane.scrollTo(0, scrollPosition)
+      }, 0)
     },
     sendMessage() {
       this.matrix.sendMessage({
