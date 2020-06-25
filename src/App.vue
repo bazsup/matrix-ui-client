@@ -2,10 +2,7 @@
   <div id="app">
     <Login @submit="login" v-if="!loggedIn" />
     <div v-else>
-      <div style="background: lightblue;">
-        Login with {{ me.user_id }}
-        <button @click="logout">logout</button>
-      </div>
+      <Navbar :user="me" @logout="logout" />
       <Room :rooms="rooms" :directRooms="directRooms" @openRoom="openRoom" />
       <Messages :messages="messages" :me="me" />
       <div v-if="activeRoom !== -1">
@@ -27,6 +24,7 @@
 import Login from '@/components/Login.vue'
 import Room from '@/components/Room.vue'
 import Messages from '@/components/Messages.vue'
+import Navbar from '@/components/Navbar.vue'
 
 import Matrix from '@/matrix'
 
@@ -35,7 +33,8 @@ export default {
   components: {
     Login,
     Room,
-    Messages
+    Messages,
+    Navbar
   },
   data() {
     return {
