@@ -34,7 +34,6 @@ export default {
         user: this.user,
         password: this.password
       }
-      console.log('login method')
       this.$emit('submit', account)
     }
   }

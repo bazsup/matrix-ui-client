@@ -27,7 +27,7 @@ export default class Matrix {
         password: account.password,
       })
       .then((response) => {
-        console.log('token: ', response.access_token)
+        // console.log('token: ', response.access_token)
         this.view.me = response
       });
   }
@@ -64,7 +64,7 @@ export default class Matrix {
     this.client = this.sdk.createClient(options);
     
     this.client.on("sync", (state) => {
-      console.log('sync', state)
+      // console.log('sync', state)
       switch (state) {
         case "PREPARED":
           this.onPrepared();
@@ -84,23 +84,23 @@ export default class Matrix {
       body: body,
       "msgtype": "m.text"
     }
-    this.client.sendEvent(roomId, "m.room.message", content, "", (err, res) => {
-      console.log(err, res)
+    this.client.sendEvent(roomId, "m.room.message", content, "", () => {
+      // console.log(err, res)
     });
   }
 
   onPrepared() {
     // notifications
-    this.client.on(
-      "Room.timeline",
-      (event, room, toStartOfTimeline, removed, data) => {
-        console.log('53!', {
-          event,
-          room,
-          toStartOfTimeline,
-          removed,
-          data
-        })
+    // this.client.on(
+    //   "Room.timeline",
+    //   (event, room, toStartOfTimeline, removed, data) => {
+        // console.log('53!', {
+        //   event,
+        //   room,
+        //   toStartOfTimeline,
+        //   removed,
+        //   data
+        // })
         // if (
         //   !toStartOfTimeline &&
         //   data.liveEvent &&
@@ -128,8 +128,8 @@ export default class Matrix {
         //     }
         //   }
         // }
-      }
-    );
+    //   }
+    // );
 
     this.updateRooms()
     this.getAccountData()
@@ -151,7 +151,7 @@ export default class Matrix {
     rooms.sort((a, b) => tsOfNewestEvent(b) - tsOfNewestEvent(a));
 
     // return rooms
-    console.log(rooms, typeof rooms)
+    // console.log(rooms, typeof rooms)
     // console.log(this.state)
     this.view.rooms = rooms
     // this.state.rooms = rooms;
