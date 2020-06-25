@@ -3,18 +3,43 @@
     <Login @submit="login" v-if="!loggedIn" />
     <div v-else>
       <Navbar :user="me" @logout="logout" />
-      <Room :rooms="rooms" :directRooms="directRooms" @openRoom="openRoom" />
-      <Messages :messages="messages" :me="me" />
-      <div v-if="activeRoom !== -1">
-        <textarea
-          name=""
-          id=""
-          cols="30"
-          rows="2"
-          placeholder="พิมพ์ข้อความไปในห้องแชท"
-          v-model="text"
-        ></textarea>
-        <button @click="sendMessage">ส่งข้อความ</button>
+      <div class="columns">
+        <div class="column is-one-third">
+          <Room
+            :rooms="rooms"
+            :directRooms="directRooms"
+            @openRoom="openRoom"
+          />
+        </div>
+        <div class="column is-fullheight pt-6 has-text-centered is-size-5" v-if="activeRoom === -1">
+          Please select room on the left menu to start conversation.
+        </div>
+        <div class="column" v-else>
+          <Messages
+            :messages="messages"
+            :me="me"
+            style="height: 80%; overflow-y: scroll;"
+          />
+          <div
+            v-if="activeRoom !== -1"
+            style="height: 20%"
+            class="columns pr-3"
+          >
+            <div class="column is-four-fifths">
+              <textarea
+                class="textarea"
+                placeholder="Type message to send"
+                rows="2"
+                v-model="text"
+              ></textarea>
+            </div>
+            <div class="column">
+              <button class="button is-primary" @click="sendMessage">
+                ส่งข้อความ
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
