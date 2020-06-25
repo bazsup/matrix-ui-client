@@ -18,7 +18,7 @@
           <Messages
             :messages="messages"
             :me="me"
-            style="height: 80%; overflow-y: scroll;"
+            style="height: 54vh; overflow-y: scroll;"
           />
           <div
             v-if="activeRoom !== -1"
