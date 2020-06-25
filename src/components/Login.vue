@@ -1,18 +1,22 @@
 <template>
-  <div>
-    <form @submit.prevent="login">
-      please login
-      <div>
-        <input type="text" v-model="user" required>
-      </div>
-      <div>
-        <input type="text" v-model="password" required>
-      </div>
-      <div>
-        <button type="submit">Login</button>
-      </div>
+  <div class="columns is-centered pt-6">
+    <div class="column is-one-quarter">
+      <form @submit.prevent="login">
+        <h1 class="title">Login form</h1>
+        <div class="field">
+          <div class="control">
+            <input class="input" type="text" placeholder="Username" v-model="user" required>
+          </div>
+        </div>
+        <div class="field">
+          <div class="control">
+            <input class="input" type="password" placeholder="Password" v-model="password" required>
+          </div>
+        </div>
+        <button type="submit" class="button is-primary is-fullwidth">Login</button>
 
-    </form>
+      </form>
+    </div>
   </div>
 </template>
 
